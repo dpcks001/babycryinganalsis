@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BottomNav } from "@/components/BottomNav";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -14,16 +14,47 @@ import {
   Moon,
   Info,
   FileText,
-  Shield
+  Shield,
+  Camera
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const Settings = () => {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState(true);
   const [cloudSync, setCloudSync] = useState(false);
   const [theme, setTheme] = useState<"system" | "light" | "dark">("light");
+  const [showProfileDialog, setShowProfileDialog] = useState(false);
+  const [profileName, setProfileName] = useState("우리아기");
+  const [profileEmail, setProfileEmail] = useState("mybaby@email.com");
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else if (theme === "light") {
+      root.classList.remove("dark");
+    } else {
+      // system
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (systemTheme) {
+        root.classList.add("dark");
+      } else {
+        root.classList.remove("dark");
+      }
+    }
+  }, [theme]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -43,14 +74,25 @@ const Settings = () => {
       <main className="flex-1 pb-24 px-6 py-6 space-y-6">
         <Card className="glass-effect border-0 p-6 bg-primary/10">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl">
+            <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl">
               👶
+              <button 
+                onClick={() => setShowProfileDialog(true)}
+                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center"
+              >
+                <Camera className="h-3 w-3 text-primary-foreground" />
+              </button>
             </div>
             <div className="flex-1">
-              <h2 className="text-lg font-semibold text-foreground">우리아기</h2>
-              <p className="text-sm text-muted-foreground">mybaby@email.com</p>
+              <h2 className="text-lg font-semibold text-foreground">{profileName}</h2>
+              <p className="text-sm text-muted-foreground">{profileEmail}</p>
             </div>
-            <button className="text-sm text-accent font-medium">계정 관리</button>
+            <button 
+              onClick={() => setShowProfileDialog(true)}
+              className="text-sm text-accent font-medium"
+            >
+              계정 관리
+            </button>
           </div>
         </Card>
 
@@ -162,6 +204,65 @@ const Settings = () => {
       </main>
 
       <BottomNav />
+
+      <Dialog open={showProfileDialog} onOpenChange={setShowProfileDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>프로필 수정</DialogTitle>
+            <DialogDescription>
+              아기의 프로필 정보를 수정할 수 있습니다.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-6 py-4">
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-4xl">
+                👶
+                <button className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                  <Camera className="h-4 w-4 text-primary-foreground" />
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">프로필 사진 변경</p>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="name">이름</Label>
+              <Input 
+                id="name" 
+                value={profileName}
+                onChange={(e) => setProfileName(e.target.value)}
+                placeholder="아기 이름"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="email">이메일</Label>
+              <Input 
+                id="email" 
+                type="email"
+                value={profileEmail}
+                onChange={(e) => setProfileEmail(e.target.value)}
+                placeholder="이메일 주소"
+              />
+            </div>
+          </div>
+          
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowProfileDialog(false)}
+              className="flex-1"
+            >
+              취소
+            </Button>
+            <Button 
+              onClick={() => setShowProfileDialog(false)}
+              className="flex-1"
+            >
+              저장
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

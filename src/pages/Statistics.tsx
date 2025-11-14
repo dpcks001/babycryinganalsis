@@ -1,20 +1,36 @@
 import { useState } from "react";
 import { BottomNav } from "@/components/BottomNav";
 import { Card } from "@/components/ui/card";
-import { Utensils, Moon, Baby } from "lucide-react";
+import { Utensils, Moon, Baby, Frown, Wind } from "lucide-react";
 
 type Period = "today" | "week" | "month";
 
 const Statistics = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<Period>("week");
 
-  const cryData = [
-    { icon: Utensils, reason: "배고파서 울었어요", time: "오후 2:30", duration: "5분 30초 동안 울었어요", bgColor: "bg-blue-50" },
-    { icon: Moon, reason: "잠이 와서 칭얼거렸어요", time: "오후 1:15", duration: "10분 12초 동안 울었어요", bgColor: "bg-purple-50" },
-    { icon: Baby, reason: "기저귀가 불편해요", time: "오전 11:40", duration: "2분 5초 동안 울었어요", bgColor: "bg-yellow-50" },
-  ];
+  const cryData = {
+    today: [
+      { icon: Utensils, reason: "배고파서 울었어요", time: "오후 2:30", duration: "5분 30초 동안 울었어요", bgColor: "bg-blue-50" },
+      { icon: Moon, reason: "잠이 와서 칭얼거렸어요", time: "오후 1:15", duration: "10분 12초 동안 울었어요", bgColor: "bg-purple-50" },
+    ],
+    week: [
+      { icon: Utensils, reason: "배고파서 울었어요", time: "오후 2:30", duration: "5분 30초 동안 울었어요", bgColor: "bg-blue-50" },
+      { icon: Moon, reason: "잠이 와서 칭얼거렸어요", time: "오후 1:15", duration: "10분 12초 동안 울었어요", bgColor: "bg-purple-50" },
+      { icon: Baby, reason: "기저귀가 불편해요", time: "오전 11:40", duration: "2분 5초 동안 울었어요", bgColor: "bg-yellow-50" },
+    ],
+    month: [
+      { icon: Utensils, reason: "배고파서 울었어요", time: "오후 2:30", duration: "5분 30초 동안 울었어요", bgColor: "bg-blue-50" },
+      { icon: Moon, reason: "잠이 와서 칭얼거렸어요", time: "오후 1:15", duration: "10분 12초 동안 울었어요", bgColor: "bg-purple-50" },
+      { icon: Baby, reason: "기저귀가 불편해요", time: "오전 11:40", duration: "2분 5초 동안 울었어요", bgColor: "bg-yellow-50" },
+      { icon: Frown, reason: "짜증이 났어요", time: "오전 9:20", duration: "8분 15초 동안 울었어요", bgColor: "bg-red-50" },
+      { icon: Wind, reason: "배앓이가 있어요", time: "오전 7:00", duration: "15분 20초 동안 울었어요", bgColor: "bg-green-50" },
+    ],
+  };
 
   const weekDays = ["월", "화", "수", "목", "금", "토", "일"];
+
+  const currentData = cryData[selectedPeriod];
+  const totalCries = selectedPeriod === "today" ? 8 : selectedPeriod === "week" ? 15 : 42;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -57,7 +73,7 @@ const Statistics = () => {
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <p className="text-xs text-muted-foreground">총 울음</p>
-                  <p className="text-2xl font-bold text-foreground">15회</p>
+                  <p className="text-2xl font-bold text-foreground">{totalCries}회</p>
                 </div>
               </div>
             </div>
@@ -100,7 +116,7 @@ const Statistics = () => {
         <div>
           <h2 className="text-base font-semibold text-foreground mb-4">최근 울음 기록</h2>
           <div className="space-y-3">
-            {cryData.map((item, index) => (
+            {currentData.map((item, index) => (
               <Card key={index} className={`glass-effect border-0 p-4 ${item.bgColor}`}>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full bg-white/50 flex items-center justify-center">
