@@ -17,17 +17,21 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 29%;
 
-    --primary: 227 55% 88%;
-    --primary-foreground: 227 55% 25%;
+    --primary: 227 55% 85%;
+    --primary-foreground: 227 55% 30%;
 
-    --secondary: 272 44% 89%;
-    --secondary-foreground: 272 44% 25%;
+    --secondary: 272 44% 85%;
+    --secondary-foreground: 272 44% 30%;
 
-    --accent: 257 39% 60%;
+    --accent: 257 50% 65%;
     --accent-foreground: 0 0% 100%;
 
     --muted: 220 14% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 215 16% 60%;
+    
+    --chart-1: 45 93% 47%;
+    --chart-2: 272 44% 70%;
+    --chart-3: 197 71% 73%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -58,18 +62,18 @@ All colors MUST be HSL.
 
 @layer utilities {
   .glass-effect {
-    background: linear-gradient(135deg, hsl(var(--glass-gradient-start)), hsl(var(--glass-gradient-end)));
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   }
 
   .nav-glass-effect {
-    background: linear-gradient(135deg, hsl(var(--glass-gradient-start) / 0.2), hsl(var(--glass-gradient-end) / 0.2));
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: hsl(var(--background));
+    border-top: 1px solid hsl(var(--border));
+  }
+  
+  .glow-effect {
+    box-shadow: 0 8px 32px rgba(190, 180, 240, 0.3);
   }
 
   @keyframes heartbeat {
