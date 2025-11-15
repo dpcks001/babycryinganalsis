@@ -96,24 +96,66 @@ export class AudioRecorder {
     
     const rms_avg = Math.sqrt(sumSquares / channelData.length);
 
-    // Use Meyda for advanced features
-    const features = Meyda.extract([
-      'spectralCentroid',
-      'spectralRolloff',
-      'zcr',
-      'mfcc',
-      'energy'
-    ], channelData);
+    // Use Meyda for advanced features - process in chunks
+    const spectralCentroids: number[] = [];
+    const spectralRolloffs: number[] = [];
+    const zcrs: number[] = [];
+    const mfccs: number[][] = [];
+    const energies: number[] = [];
+
+    for (let i = 0; i < channelData.length; i += windowSize) {
+      const end = Math.min(i + windowSize, channelData.length);
+      if (end - i < windowSize) break; // Skip last incomplete window
+      
+      const chunk = channelData.slice(i, end);
+      const features = Meyda.extract([
+        'spectralCentroid',
+        'spectralRolloff',
+        'zcr',
+        'mfcc',
+        'energy'
+      ], chunk);
+
+      if (features.spectralCentroid) spectralCentroids.push(features.spectralCentroid);
+      if (features.spectralRolloff) spectralRolloffs.push(features.spectralRolloff);
+      if (features.zcr) zcrs.push(features.zcr);
+      if (features.mfcc) mfccs.push(features.mfcc);
+      if (features.energy) energies.push(features.energy);
+    }
+
+    // Calculate averages from collected features
+    const avgSpectralCentroid = spectralCentroids.length > 0 
+      ? spectralCentroids.reduce((a, b) => a + b, 0) / spectralCentroids.length 
+      : 0;
+    
+    const avgSpectralRolloff = spectralRolloffs.length > 0
+      ? spectralRolloffs.reduce((a, b) => a + b, 0) / spectralRolloffs.length
+      : 0;
+    
+    const avgZcr = zcrs.length > 0
+      ? zcrs.reduce((a, b) => a + b, 0) / zcrs.length
+      : 0;
+    
+    const avgEnergy = energies.length > 0
+      ? energies.reduce((a, b) => a + b, 0) / energies.length
+      : 0;
+
+    // Average MFCC coefficients
+    const avgMfcc = mfccs.length > 0
+      ? mfccs[0].map((_, i) => 
+          mfccs.reduce((sum, mfcc) => sum + mfcc[i], 0) / mfccs.length
+        )
+      : [];
 
     const result: AudioAnalysisResult = {
       duration,
       rms_avg,
       rms_max: maxRms,
-      spectral_centroid_mean: features.spectralCentroid || 0,
-      spectral_rolloff_mean: features.spectralRolloff || 0,
-      zcr_mean: features.zcr || 0,
-      mfcc_mean: features.mfcc || [],
-      energy_avg: features.energy || 0,
+      spectral_centroid_mean: avgSpectralCentroid,
+      spectral_rolloff_mean: avgSpectralRolloff,
+      zcr_mean: avgZcr,
+      mfcc_mean: avgMfcc,
+      energy_avg: avgEnergy,
       timestamp: new Date().toISOString()
     };
 
