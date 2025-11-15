@@ -15,7 +15,8 @@ import {
   Info,
   FileText,
   Shield,
-  Camera
+  Camera,
+  Calendar as CalendarIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -28,6 +29,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -37,6 +43,8 @@ const Settings = () => {
   const [showProfileDialog, setShowProfileDialog] = useState(false);
   const [profileName, setProfileName] = useState("우리아기");
   const [profileEmail, setProfileEmail] = useState("mybaby@email.com");
+  const [gender, setGender] = useState<"male" | "female">("female");
+  const [birthDate, setBirthDate] = useState<Date>();
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -96,6 +104,60 @@ const Settings = () => {
                 <span className="text-foreground">푸시 알림</span>
               </div>
               <Switch checked={notifications} onCheckedChange={setNotifications} />
+            </div>
+          </Card>
+        </div>
+
+        <div>
+          <h3 className="text-xs font-semibold text-accent mb-3 px-1">아기 정보</h3>
+          <Card className="glass-effect border-0 divide-y divide-border">
+            <div className="p-4 space-y-3">
+              <Label className="text-foreground">성별</Label>
+              <div className="flex gap-2">
+                <Button
+                  variant={gender === "male" ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setGender("male")}
+                >
+                  남자
+                </Button>
+                <Button
+                  variant={gender === "female" ? "default" : "outline"}
+                  className="flex-1"
+                  onClick={() => setGender("female")}
+                >
+                  여자
+                </Button>
+              </div>
+            </div>
+            <div className="p-4 space-y-3">
+              <Label className="text-foreground">생년월일</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !birthDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {birthDate ? format(birthDate, "PPP", { locale: ko }) : <span>날짜를 선택하세요</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={birthDate}
+                    onSelect={setBirthDate}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("2020-01-01")
+                    }
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </Card>
         </div>
