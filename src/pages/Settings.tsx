@@ -53,7 +53,10 @@ const Settings = () => {
   const t = useTranslation();
   const [notifications, setNotifications] = useState(true);
   const [cloudSync, setCloudSync] = useState(false);
-  const [theme, setTheme] = useState<"system" | "light" | "dark">("light");
+  const [theme, setTheme] = useState<"system" | "light" | "dark">(() => {
+    const saved = localStorage.getItem('theme');
+    return (saved as "system" | "light" | "dark") || "system";
+  });
   const [showProfileDialog, setShowProfileDialog] = useState(false);
   const [profileName, setProfileName] = useState("우리아기");
   const [profileEmail, setProfileEmail] = useState("mybaby@email.com");
@@ -76,6 +79,9 @@ const Settings = () => {
 
   useEffect(() => {
     const root = window.document.documentElement;
+    
+    // Save theme to localStorage
+    localStorage.setItem('theme', theme);
     
     if (theme === "dark") {
       root.classList.add("dark");
