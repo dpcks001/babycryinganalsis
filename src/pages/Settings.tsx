@@ -43,6 +43,7 @@ const Settings = () => {
   const [showProfileDialog, setShowProfileDialog] = useState(false);
   const [profileName, setProfileName] = useState("우리아기");
   const [profileEmail, setProfileEmail] = useState("mybaby@email.com");
+  const [babyName, setBabyName] = useState("");
   const [gender, setGender] = useState<"male" | "female">("female");
   const [birthDate, setBirthDate] = useState<Date>();
 
@@ -112,6 +113,15 @@ const Settings = () => {
           <h3 className="text-xs font-semibold text-accent mb-3 px-1">아기 정보</h3>
           <Card className="glass-effect border-0 divide-y divide-border">
             <div className="p-4 space-y-3">
+              <Label className="text-foreground">아기 이름</Label>
+              <Input 
+                placeholder="이름을 입력하세요" 
+                value={babyName}
+                onChange={(e) => setBabyName(e.target.value)}
+                className="bg-background"
+              />
+            </div>
+            <div className="p-4 space-y-3">
               <Label className="text-foreground">성별</Label>
               <div className="flex gap-2">
                 <Button
@@ -172,13 +182,6 @@ const Settings = () => {
               </div>
               <Switch checked={cloudSync} onCheckedChange={setCloudSync} />
             </div>
-            <button className="flex items-center justify-between p-4 w-full text-left hover:bg-muted/50 transition-colors">
-              <div className="flex items-center gap-3">
-                <Trash2 className="h-5 w-5 text-accent" />
-                <span className="text-foreground">캐시 지우기</span>
-              </div>
-              <span className="text-muted-foreground">›</span>
-            </button>
           </Card>
         </div>
 
