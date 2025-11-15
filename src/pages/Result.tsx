@@ -12,17 +12,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useTranslation } from "@/lib/translations";
 
 const Result = () => {
   const navigate = useNavigate();
   const [showSolutionDialog, setShowSolutionDialog] = useState(false);
+  const t = useTranslation();
 
   const results = [
-    { icon: Moon, label: "졸림/과피곤", value: 78 },
-    { icon: Frown, label: "짜증/불편", value: 45 },
-    { icon: Wind, label: "가스/배앓이", value: 22 },
-    { icon: Utensils, label: "배고픔", value: 15 },
-    { icon: Baby, label: "기저귀/일반 불편", value: 5 },
+    { icon: Moon, label: t.sleepy, value: 78 },
+    { icon: Frown, label: t.uncomfortable, value: 45 },
+    { icon: Wind, label: t.uncomfortable, value: 22 },
+    { icon: Utensils, label: t.hungry, value: 15 },
+    { icon: Baby, label: t.uncomfortable, value: 5 },
   ];
 
   const topResult = results[0];
@@ -50,12 +52,12 @@ const Result = () => {
         >
           <ArrowLeft className="h-6 w-6 text-foreground" />
         </button>
-        <h1 className="text-lg font-bold text-foreground">분석 결과</h1>
+        <h1 className="text-lg font-bold text-foreground">{t.analysisResult}</h1>
       </header>
 
       <main className="flex-1 pb-24 px-6 py-8">
         <div className="text-center mb-8">
-          <p className="text-sm text-muted-foreground mb-2">지금 우는건...</p>
+          <p className="text-sm text-muted-foreground mb-2">{t.analysisResult}</p>
           <h2 className="text-3xl font-bold text-foreground mb-8">{topResult.label}</h2>
           
           <div className="w-48 h-48 mx-auto rounded-full bg-primary/10 flex items-center justify-center glow-effect mb-8">
@@ -100,7 +102,7 @@ const Result = () => {
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-base"
           onClick={() => setShowSolutionDialog(true)}
         >
-          대처 방법 확인하기
+          {t.checkSolution}
         </Button>
       </main>
 
@@ -111,24 +113,16 @@ const Result = () => {
           <DialogHeader>
             <DialogTitle className="text-xl font-bold flex items-center gap-2">
               <topResult.icon className="h-6 w-6 text-primary" />
-              {topResult.label} 대처 방법
+              {topResult.label} {t.solutionDialogDescription}
             </DialogTitle>
             <DialogDescription className="text-left space-y-4 pt-4">
               <div>
-                <h4 className="font-semibold text-foreground mb-2">증상</h4>
                 <p className="text-sm text-muted-foreground">
-                  아기가 눈을 비비거나 하품을 하며 보챕니다. 
-                  수면 시간이 다가왔거나 과도한 자극으로 피곤한 상태입니다.
+                  {topResult.label === t.sleepy && t.sleepySolution}
+                  {topResult.label === t.hungry && t.hungrySolution}
+                  {topResult.label === t.uncomfortable && t.uncomfortableSolution}
+                  {topResult.label === t.pain && t.painSolution}
                 </p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-foreground mb-2">대처 방법</h4>
-                <ul className="text-sm text-muted-foreground space-y-2">
-                  <li>• 조용하고 어두운 환경 만들기</li>
-                  <li>• 부드럽게 안아서 흔들어주기</li>
-                  <li>• 백색소음이나 자장가 틀어주기</li>
-                  <li>• 편안한 온도 유지하기</li>
-                </ul>
               </div>
             </DialogDescription>
           </DialogHeader>
@@ -136,7 +130,7 @@ const Result = () => {
             onClick={() => setShowSolutionDialog(false)}
             className="w-full"
           >
-            확인
+            {t.close}
           </Button>
         </DialogContent>
       </Dialog>

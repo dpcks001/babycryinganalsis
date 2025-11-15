@@ -3,38 +3,40 @@ import { Mic } from "lucide-react";
 import { BottomNav } from "@/components/BottomNav";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useTranslation } from "@/lib/translations";
 
 const Home = () => {
   const [isRecording, setIsRecording] = useState(false);
   const navigate = useNavigate();
+  const t = useTranslation();
 
   const handleRecordToggle = () => {
     if (!isRecording) {
       setIsRecording(true);
-      toast.success("녹음이 시작되었습니다");
+      toast.success(t.recordButton);
       
       setTimeout(() => {
         navigate("/processing");
       }, 3000);
     } else {
       setIsRecording(false);
-      toast.info("녹음이 중지되었습니다");
+      toast.info(t.cancel);
     }
   };
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="flex h-16 items-center justify-center px-4">
-        <h1 className="text-xl font-bold text-foreground">BabyCry Analyzer</h1>
+        <h1 className="text-xl font-bold text-foreground">{t.appTitle}</h1>
       </header>
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 pb-24">
         <div className="text-center mb-12 space-y-4">
           <h2 className="text-4xl font-bold text-foreground">
-            What does your baby need?
+            {t.recentAnalysis}
           </h2>
           <p className="text-lg text-muted-foreground">
-            Tap to start analyzing your baby's cry
+            {t.noRecentData}
           </p>
         </div>
 
@@ -55,7 +57,7 @@ const Home = () => {
 
         {isRecording && (
           <p className="mt-8 text-lg font-medium text-foreground animate-pulse">
-            Recording...
+            {t.analyzing}
           </p>
         )}
       </main>
