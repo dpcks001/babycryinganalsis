@@ -17,13 +17,49 @@ const Home = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [showResultDialog, setShowResultDialog] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [recordingTime, setRecordingTime] = useState(0);
   const navigate = useNavigate();
   const t = useTranslation();
   const recorderRef = useRef<AudioRecorder | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const stopRecordingAndAnalyze = async () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    if (recordingTimerRef.current) {
+      clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+
+    try {
+      setIsRecording(false);
+      setRecordingTime(0);
+      toast.info("분석 중...");
+      navigate("/processing");
+
+      const audioBlob = await recorderRef.current!.stopRecording();
+      const result = await recorderRef.current!.analyzeAudio(audioBlob);
+      
+      localStorage.setItem('audioAnalysisResult', JSON.stringify(result));
+      
+      setAnalysisResult(result);
+      setShowResultDialog(true);
+      
+      setTimeout(() => {
+        navigate("/result");
+      }, 2000);
+    } catch (error) {
+      console.error('Analysis error:', error);
+      toast.error("분석 중 오류가 발생했습니다");
+      navigate("/");
+    }
+  };
 
   const handleRecordToggle = async () => {
     if (!isRecording) {
-      // 마이크 권한 요청 및 녹음 시작
       try {
         if (!recorderRef.current) {
           recorderRef.current = new AudioRecorder();
@@ -37,36 +73,24 @@ const Home = () => {
 
         await recorderRef.current.startRecording();
         setIsRecording(true);
-        toast.success(t.recordButton);
+        setRecordingTime(0);
+        toast.success("녹음 시작 (10초)");
+
+        // 1초마다 타이머 업데이트
+        recordingTimerRef.current = setInterval(() => {
+          setRecordingTime(prev => prev + 1);
+        }, 1000);
+
+        // 10초 후 자동 중지
+        timerRef.current = setTimeout(() => {
+          stopRecordingAndAnalyze();
+        }, 10000);
       } catch (error) {
         console.error('Recording error:', error);
         toast.error("녹음을 시작할 수 없습니다");
       }
     } else {
-      // 녹음 중지 및 분석
-      try {
-        setIsRecording(false);
-        toast.info("분석 중...");
-        navigate("/processing");
-
-        const audioBlob = await recorderRef.current!.stopRecording();
-        const result = await recorderRef.current!.analyzeAudio(audioBlob);
-        
-        // 결과를 localStorage에 저장
-        localStorage.setItem('audioAnalysisResult', JSON.stringify(result));
-        
-        setAnalysisResult(result);
-        setShowResultDialog(true);
-        
-        // 3초 후 결과 페이지로 이동
-        setTimeout(() => {
-          navigate("/result");
-        }, 2000);
-      } catch (error) {
-        console.error('Analysis error:', error);
-        toast.error("분석 중 오류가 발생했습니다");
-        navigate("/");
-      }
+      stopRecordingAndAnalyze();
     }
   };
 
@@ -99,9 +123,14 @@ const Home = () => {
         </button>
 
         {isRecording && (
-          <p className="mt-8 text-lg font-medium text-foreground animate-pulse">
-            {t.analyzing}
-          </p>
+          <div className="mt-8 text-center">
+            <p className="text-lg font-medium text-foreground animate-pulse">
+              녹음 중...
+            </p>
+            <p className="text-2xl font-bold text-primary mt-2">
+              {recordingTime} / 10초
+            </p>
+          </div>
         )}
       </main>
 
