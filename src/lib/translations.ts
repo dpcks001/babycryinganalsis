@@ -11,7 +11,7 @@ export const translations = {
     appTitle: 'BabyCry Analyzer',
     recordButton: '녹음 시작',
     recentAnalysis: '최근 분석',
-    noRecentData: '최근 분석 기록이 없습니다',
+    noRecentData: '버튼을 눌러 울음소리를 들려주세요',
     
     // Processing Page
     analyzing: '분석 중...',
@@ -101,7 +101,7 @@ export const translations = {
     appTitle: 'BabyCry Analyzer',
     recordButton: 'Start Recording',
     recentAnalysis: 'Recent Analysis',
-    noRecentData: 'No recent analysis records',
+    noRecentData: 'Press the button to let me hear the cry',
     
     // Processing Page
     analyzing: 'Analyzing...',
@@ -191,7 +191,7 @@ export const translations = {
     appTitle: 'BabyCry Analyzer',
     recordButton: '録音開始',
     recentAnalysis: '最近の分析',
-    noRecentData: '最近の分析記録がありません',
+    noRecentData: 'ボタンを押して泣き声を聞かせてください',
     
     // Processing Page
     analyzing: '分析中...',
@@ -281,7 +281,7 @@ export const translations = {
     appTitle: 'BabyCry Analyzer',
     recordButton: '开始录音',
     recentAnalysis: '最近分析',
-    noRecentData: '没有最近的分析记录',
+    noRecentData: '请按按钮让我听听哭声',
     
     // Processing Page
     analyzing: '分析中...',
@@ -371,7 +371,7 @@ export const translations = {
     appTitle: 'BabyCry Analyzer',
     recordButton: 'Iniciar grabación',
     recentAnalysis: 'Análisis reciente',
-    noRecentData: 'No hay registros de análisis recientes',
+    noRecentData: 'Presiona el botón para que escuche el llanto',
     
     // Processing Page
     analyzing: 'Analizando...',

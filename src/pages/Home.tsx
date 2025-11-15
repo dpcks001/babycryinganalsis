@@ -31,10 +31,7 @@ const Home = () => {
       </header>
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 pb-24">
-        <div className="text-center mb-12 space-y-4">
-          <h2 className="text-4xl font-bold text-foreground">
-            {t.recentAnalysis}
-          </h2>
+        <div className="text-center mb-12">
           <p className="text-lg text-muted-foreground">
             {t.noRecentData}
           </p>
