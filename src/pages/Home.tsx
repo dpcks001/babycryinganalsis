@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/translations";
 import { AudioRecorder } from "@/utils/audioAnalysis";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
   DialogContent,
@@ -43,7 +44,28 @@ const Home = () => {
       const audioBlob = await recorderRef.current!.stopRecording();
       const result = await recorderRef.current!.analyzeAudio(audioBlob);
       
-      localStorage.setItem('audioAnalysisResult', JSON.stringify(result));
+      // Save to database
+      const { data, error } = await supabase
+        .from('audio_analyses')
+        .insert({
+          duration: result.duration,
+          rms_avg: result.rms_avg,
+          rms_max: result.rms_max,
+          spectral_centroid_mean: result.spectral_centroid_mean,
+          spectral_rolloff_mean: result.spectral_rolloff_mean,
+          zcr_mean: result.zcr_mean,
+          mfcc_mean: result.mfcc_mean,
+          energy_avg: result.energy_avg
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error saving to database:', error);
+        toast.error("분석 결과 저장 실패");
+      } else {
+        localStorage.setItem('audioAnalysisResult', JSON.stringify(data));
+      }
       
       setAnalysisResult(result);
       setShowResultDialog(true);

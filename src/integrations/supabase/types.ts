@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audio_analyses: {
+        Row: {
+          created_at: string
+          duration: number
+          energy_avg: number
+          id: string
+          mfcc_mean: Json
+          rms_avg: number
+          rms_max: number
+          spectral_centroid_mean: number
+          spectral_rolloff_mean: number
+          zcr_mean: number
+        }
+        Insert: {
+          created_at?: string
+          duration: number
+          energy_avg: number
+          id?: string
+          mfcc_mean: Json
+          rms_avg: number
+          rms_max: number
+          spectral_centroid_mean: number
+          spectral_rolloff_mean: number
+          zcr_mean: number
+        }
+        Update: {
+          created_at?: string
+          duration?: number
+          energy_avg?: number
+          id?: string
+          mfcc_mean?: Json
+          rms_avg?: number
+          rms_max?: number
+          spectral_centroid_mean?: number
+          spectral_rolloff_mean?: number
+          zcr_mean?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
