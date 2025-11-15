@@ -59,9 +59,20 @@ const Settings = () => {
   const [profileEmail, setProfileEmail] = useState("mybaby@email.com");
   const [babyName, setBabyName] = useState("");
   const [gender, setGender] = useState<"male" | "female">("female");
-  const [birthDate, setBirthDate] = useState<Date>();
+  const [birthDate, setBirthDate] = useState<Date>(() => {
+    const saved = localStorage.getItem('babyBirthDate');
+    return saved ? new Date(saved) : undefined;
+  });
   const [tempBirthDate, setTempBirthDate] = useState<Date>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  
+  const handleBirthDateConfirm = () => {
+    if (tempBirthDate) {
+      setBirthDate(tempBirthDate);
+      localStorage.setItem('babyBirthDate', tempBirthDate.toISOString());
+      setIsDatePickerOpen(false);
+    }
+  };
 
   useEffect(() => {
     const root = window.document.documentElement;
