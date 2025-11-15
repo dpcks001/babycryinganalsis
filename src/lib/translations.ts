@@ -32,6 +32,13 @@ export const translations = {
     uncomfortableSolution: '기저귀 상태를 확인하고 교체해주세요. 실내 온도가 적절한지 확인하세요.',
     painSolution: '아기의 몸 상태를 확인하세요. 증상이 지속되면 병원 방문을 권장합니다.',
     close: '닫기',
+    isThisCorrect: '이 분석이 맞나요?',
+    yes: '맞아요',
+    no: '아니에요',
+    selectCorrectOption: '올바른 상태를 선택해주세요',
+    saved: '저장되었습니다',
+    solutionMethods: '대응 방법',
+    months: '개월',
     
     // Statistics Page
     cryHistory: '울음 히스토리',
@@ -115,6 +122,13 @@ export const translations = {
     uncomfortableSolution: 'Check and change diaper. Verify room temperature is appropriate.',
     painSolution: 'Check baby\'s condition. Visit doctor if symptoms persist.',
     close: 'Close',
+    isThisCorrect: 'Is this analysis correct?',
+    yes: 'Yes',
+    no: 'No',
+    selectCorrectOption: 'Please select the correct state',
+    saved: 'Saved',
+    solutionMethods: 'Solution Methods',
+    months: 'months',
     
     // Statistics Page
     cryHistory: 'Cry History',
@@ -198,6 +212,13 @@ export const translations = {
     uncomfortableSolution: 'おむつの状態を確認して交換してください。室温が適切か確認してください。',
     painSolution: '赤ちゃんの体調を確認してください。症状が続く場合は病院を受診してください。',
     close: '閉じる',
+    isThisCorrect: 'この分析は正しいですか？',
+    yes: 'はい',
+    no: 'いいえ',
+    selectCorrectOption: '正しい状態を選択してください',
+    saved: '保存されました',
+    solutionMethods: '対処方法',
+    months: 'ヶ月',
     
     // Statistics Page
     cryHistory: '泣き声履歴',
@@ -281,6 +302,13 @@ export const translations = {
     uncomfortableSolution: '检查并更换尿布。确认室温是否合适。',
     painSolution: '检查宝宝的身体状况。如症状持续请就医。',
     close: '关闭',
+    isThisCorrect: '这个分析正确吗？',
+    yes: '是的',
+    no: '不是',
+    selectCorrectOption: '请选择正确的状态',
+    saved: '已保存',
+    solutionMethods: '解决方法',
+    months: '个月',
     
     // Statistics Page
     cryHistory: '哭声历史',
@@ -364,6 +392,13 @@ export const translations = {
     uncomfortableSolution: 'Revise y cambie el pañal. Verifique que la temperatura sea adecuada.',
     painSolution: 'Verifique la condición del bebé. Consulte al médico si los síntomas persisten.',
     close: 'Cerrar',
+    isThisCorrect: '¿Es correcto este análisis?',
+    yes: 'Sí',
+    no: 'No',
+    selectCorrectOption: 'Por favor seleccione el estado correcto',
+    saved: 'Guardado',
+    solutionMethods: 'Métodos de solución',
+    months: 'meses',
     
     // Statistics Page
     cryHistory: 'Historial de llanto',
