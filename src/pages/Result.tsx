@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Moon, Frown, Wind, Utensils, Baby, Check, X } from "lucide-react";
+import { ArrowLeft, Moon, Frown, Wind, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { BottomNav } from "@/components/BottomNav";
@@ -11,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "@/lib/translations";
 import { toast } from "sonner";
 
@@ -19,7 +18,7 @@ const Result = () => {
   const navigate = useNavigate();
   const [showCorrectionDialog, setShowCorrectionDialog] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("0");
+  const [selectedResultIndex, setSelectedResultIndex] = useState<number | null>(null);
   const [babyAgeMonths, setBabyAgeMonths] = useState<number>(0);
   const t = useTranslation();
 
@@ -190,33 +189,36 @@ const Result = () => {
           )}
         </div>
 
-        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
-            {results.map((result, index) => (
-              <TabsTrigger key={index} value={index.toString()} className="gap-2">
-                <result.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{result.label}</span>
-                <span className="text-xs">{result.value}%</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
+        <div className="space-y-3 mb-8">
           {results.map((result, index) => (
-            <TabsContent key={index} value={index.toString()} className="space-y-4">
-              <Card className="glass-effect p-5 border-0">
-                <div className="flex items-center gap-3 mb-4">
-                  <result.icon className={`h-6 w-6 ${getColorClass(result.value)}`} />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-foreground">{result.label}</span>
-                      <span className={`text-xl font-bold ${getColorClass(result.value)}`}>
-                        {result.value}%
-                      </span>
-                    </div>
+            <Card 
+              key={index} 
+              className="glass-effect p-5 border-0 cursor-pointer transition-all hover:bg-accent/5"
+              onClick={() => setSelectedResultIndex(selectedResultIndex === index ? null : index)}
+            >
+              <div className="flex items-center gap-4 mb-3">
+                <result.icon 
+                  className={`h-8 w-8 ${getColorClass(result.value)}`} 
+                  strokeWidth={1.5} 
+                />
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-foreground">{result.label}</span>
+                    <span className={`text-lg font-bold ${getColorClass(result.value)}`}>
+                      {result.value}%
+                    </span>
+                  </div>
+                  <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full transition-all ${getProgressColor(result.value)}`}
+                      style={{ width: `${result.value}%` }}
+                    />
                   </div>
                 </div>
-                
-                <div className="space-y-3">
+              </div>
+
+              {selectedResultIndex === index && (
+                <div className="mt-4 pt-4 border-t border-border space-y-3 animate-in slide-in-from-top-2">
                   <h3 className="font-semibold text-foreground flex items-center gap-2">
                     {t.solutionMethods}
                     {babyAgeMonths > 0 && (
@@ -234,10 +236,10 @@ const Result = () => {
                     ))}
                   </ul>
                 </div>
-              </Card>
-            </TabsContent>
+              )}
+            </Card>
           ))}
-        </Tabs>
+        </div>
       </main>
 
       <BottomNav />
