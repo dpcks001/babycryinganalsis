@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AudioWaveform } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/translations";
 
 const Processing = () => {
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
+  const t = useTranslation();
 
   useEffect(() => {
     const progressInterval = setInterval(() => {
@@ -44,7 +46,7 @@ const Processing = () => {
 
         <div className="space-y-4">
           <h1 className="text-3xl font-bold text-foreground">
-            분석 중입니다...
+            {t.analyzing}
           </h1>
         </div>
 
@@ -57,10 +59,7 @@ const Processing = () => {
 
         <div className="space-y-4 text-left">
           <p className="text-sm text-muted-foreground">
-            잠시만 기다려주세요.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            AI가 우는 이유를 꼼꼼히 살피는 중이에요.
+            {t.processingMessage}
           </p>
         </div>
 
@@ -69,7 +68,7 @@ const Processing = () => {
           onClick={handleCancel}
           className="w-full"
         >
-          분석 취소
+          {t.cancel}
         </Button>
       </div>
     </div>

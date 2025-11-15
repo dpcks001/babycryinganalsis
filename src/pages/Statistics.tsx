@@ -2,28 +2,30 @@ import { useState } from "react";
 import { BottomNav } from "@/components/BottomNav";
 import { Card } from "@/components/ui/card";
 import { Utensils, Moon, Baby, Frown, Wind } from "lucide-react";
+import { useTranslation } from "@/lib/translations";
 
 type Period = "today" | "week" | "month";
 
 const Statistics = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<Period>("week");
+  const t = useTranslation();
 
   const cryData = {
     today: [
-      { icon: Utensils, reason: "배고파서 울었어요", time: "오후 2:30", duration: "5분 30초 동안 울었어요", bgColor: "bg-blue-50" },
-      { icon: Moon, reason: "잠이 와서 칭얼거렸어요", time: "오후 1:15", duration: "10분 12초 동안 울었어요", bgColor: "bg-purple-50" },
+      { icon: Utensils, reason: t.hungry, time: "오후 2:30", duration: "5분 30초", bgColor: "bg-blue-50" },
+      { icon: Moon, reason: t.sleepy, time: "오후 1:15", duration: "10분 12초", bgColor: "bg-purple-50" },
     ],
     week: [
-      { icon: Utensils, reason: "배고파서 울었어요", time: "오후 2:30", duration: "5분 30초 동안 울었어요", bgColor: "bg-blue-50" },
-      { icon: Moon, reason: "잠이 와서 칭얼거렸어요", time: "오후 1:15", duration: "10분 12초 동안 울었어요", bgColor: "bg-purple-50" },
-      { icon: Baby, reason: "기저귀가 불편해요", time: "오전 11:40", duration: "2분 5초 동안 울었어요", bgColor: "bg-yellow-50" },
+      { icon: Utensils, reason: t.hungry, time: "오후 2:30", duration: "5분 30초", bgColor: "bg-blue-50" },
+      { icon: Moon, reason: t.sleepy, time: "오후 1:15", duration: "10분 12초", bgColor: "bg-purple-50" },
+      { icon: Baby, reason: t.uncomfortable, time: "오전 11:40", duration: "2분 5초", bgColor: "bg-yellow-50" },
     ],
     month: [
-      { icon: Utensils, reason: "배고파서 울었어요", time: "오후 2:30", duration: "5분 30초 동안 울었어요", bgColor: "bg-blue-50" },
-      { icon: Moon, reason: "잠이 와서 칭얼거렸어요", time: "오후 1:15", duration: "10분 12초 동안 울었어요", bgColor: "bg-purple-50" },
-      { icon: Baby, reason: "기저귀가 불편해요", time: "오전 11:40", duration: "2분 5초 동안 울었어요", bgColor: "bg-yellow-50" },
-      { icon: Frown, reason: "짜증이 났어요", time: "오전 9:20", duration: "8분 15초 동안 울었어요", bgColor: "bg-red-50" },
-      { icon: Wind, reason: "배앓이가 있어요", time: "오전 7:00", duration: "15분 20초 동안 울었어요", bgColor: "bg-green-50" },
+      { icon: Utensils, reason: t.hungry, time: "오후 2:30", duration: "5분 30초", bgColor: "bg-blue-50" },
+      { icon: Moon, reason: t.sleepy, time: "오후 1:15", duration: "10분 12초", bgColor: "bg-purple-50" },
+      { icon: Baby, reason: t.uncomfortable, time: "오전 11:40", duration: "2분 5초", bgColor: "bg-yellow-50" },
+      { icon: Frown, reason: t.uncomfortable, time: "오전 9:20", duration: "8분 15초", bgColor: "bg-red-50" },
+      { icon: Wind, reason: t.pain, time: "오전 7:00", duration: "15분 20초", bgColor: "bg-green-50" },
     ],
   };
 
@@ -35,7 +37,7 @@ const Statistics = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-10 flex h-16 items-center justify-center bg-background border-b border-border px-4">
-        <h1 className="text-lg font-bold text-foreground">우리아기 울음기록</h1>
+        <h1 className="text-lg font-bold text-foreground">{t.cryHistory}</h1>
       </header>
 
       <main className="flex-1 pb-24 px-6 py-6">
@@ -50,15 +52,15 @@ const Statistics = () => {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {period === "today" && "오늘"}
-              {period === "week" && "이번주"}
-              {period === "month" && "이번달"}
+              {period === "today" && t.today}
+              {period === "week" && t.thisWeek}
+              {period === "month" && t.thisMonth}
             </button>
           ))}
         </div>
 
         <div className="mb-8">
-          <h2 className="text-base font-semibold text-foreground mb-4">울음 종류</h2>
+          <h2 className="text-base font-semibold text-foreground mb-4">{t.cryTypes}</h2>
           <Card className="glass-effect border-0 p-6">
             <div className="flex items-center justify-center mb-6">
               <div className="relative w-40 h-40">
@@ -72,49 +74,30 @@ const Statistics = () => {
                     strokeDasharray="63 251" strokeDashoffset="-138" strokeLinecap="round" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <p className="text-xs text-muted-foreground">총 울음</p>
-                  <p className="text-2xl font-bold text-foreground">{totalCries}회</p>
+                  <p className="text-xs text-muted-foreground">{t.totalCries}</p>
+                  <p className="text-2xl font-bold text-foreground">{totalCries}{t.times}</p>
                 </div>
               </div>
             </div>
             <div className="flex items-center justify-center gap-4 text-xs">
               <div className="flex items-center gap-1">
                 <div className="w-3 h-3 rounded-full bg-chart-3"></div>
-                <span className="text-muted-foreground">배고픔</span>
+                <span className="text-muted-foreground">{t.hungry}</span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="w-3 h-3 rounded-full bg-chart-2"></div>
-                <span className="text-muted-foreground">졸음</span>
+                <span className="text-muted-foreground">{t.sleepy}</span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="w-3 h-3 rounded-full bg-chart-1"></div>
-                <span className="text-muted-foreground">불편함</span>
+                <span className="text-muted-foreground">{t.uncomfortable}</span>
               </div>
-            </div>
-          </Card>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-base font-semibold text-foreground mb-4">주간 울음 시간</h2>
-          <Card className="glass-effect border-0 p-6">
-            <div className="flex items-end justify-between h-40 gap-2">
-              {weekDays.map((day, index) => (
-                <div key={day} className="flex-1 flex flex-col items-center gap-2">
-                  <div className="flex-1 w-full flex items-end">
-                    <div 
-                      className="w-full bg-primary/30 rounded-t-lg transition-all"
-                      style={{ height: `${Math.random() * 100}%` }}
-                    />
-                  </div>
-                  <span className="text-xs text-muted-foreground">{day}</span>
-                </div>
-              ))}
             </div>
           </Card>
         </div>
 
         <div>
-          <h2 className="text-base font-semibold text-foreground mb-4">최근 울음 기록</h2>
+          <h2 className="text-base font-semibold text-foreground mb-4">{t.recentRecords}</h2>
           <div className="space-y-3">
             {currentData.map((item, index) => (
               <Card key={index} className={`glass-effect border-0 p-4 ${item.bgColor}`}>
