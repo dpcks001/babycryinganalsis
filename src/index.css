@@ -70,10 +70,20 @@ All colors MUST be HSL.
 @layer base {
   * {
     @apply border-border;
+    transition: border-color 0.3s ease-in-out;
   }
 
   body {
     @apply bg-background text-foreground;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+
+  .glass-effect,
+  .nav-glass-effect,
+  [class*="bg-"],
+  [class*="text-"],
+  [class*="border-"] {
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out;
   }
 }
 
