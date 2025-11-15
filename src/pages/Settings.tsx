@@ -32,8 +32,20 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { ko } from "date-fns/locale";
+import { ko, enUS, ja, zhCN, es, fr, de } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+
+// Get system locale
+const getSystemLocale = () => {
+  const lang = navigator.language.toLowerCase();
+  if (lang.startsWith('ko')) return ko;
+  if (lang.startsWith('ja')) return ja;
+  if (lang.startsWith('zh')) return zhCN;
+  if (lang.startsWith('es')) return es;
+  if (lang.startsWith('fr')) return fr;
+  if (lang.startsWith('de')) return de;
+  return enUS;
+};
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -46,6 +58,8 @@ const Settings = () => {
   const [babyName, setBabyName] = useState("");
   const [gender, setGender] = useState<"male" | "female">("female");
   const [birthDate, setBirthDate] = useState<Date>();
+  const [tempBirthDate, setTempBirthDate] = useState<Date>();
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -142,7 +156,7 @@ const Settings = () => {
             </div>
             <div className="p-4 space-y-3">
               <Label className="text-foreground">생년월일</Label>
-              <Popover>
+              <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
@@ -152,20 +166,34 @@ const Settings = () => {
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {birthDate ? format(birthDate, "PPP", { locale: ko }) : <span>날짜를 선택하세요</span>}
+                    {birthDate ? format(birthDate, "PPP", { locale: getSystemLocale() }) : <span>날짜를 선택하세요</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={birthDate}
-                    onSelect={setBirthDate}
+                    selected={tempBirthDate}
+                    onSelect={setTempBirthDate}
                     disabled={(date) =>
                       date > new Date() || date < new Date("2020-01-01")
                     }
                     initialFocus
                     className={cn("p-3 pointer-events-auto")}
                   />
+                  <div className="p-3 border-t border-border">
+                    <Button 
+                      className="w-full"
+                      onClick={() => {
+                        if (tempBirthDate) {
+                          setBirthDate(tempBirthDate);
+                          setIsDatePickerOpen(false);
+                        }
+                      }}
+                      disabled={!tempBirthDate}
+                    >
+                      확인
+                    </Button>
+                  </div>
                 </PopoverContent>
               </Popover>
             </div>
