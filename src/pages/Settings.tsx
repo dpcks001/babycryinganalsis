@@ -59,16 +59,7 @@ const Settings = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-10 flex h-16 items-center justify-center bg-background border-b border-border px-4">
-        <button
-          onClick={() => navigate("/")}
-          className="absolute left-4 p-2"
-        >
-          <ArrowLeft className="h-6 w-6 text-foreground" />
-        </button>
         <h1 className="text-lg font-bold text-foreground">설정</h1>
-        <button className="absolute right-4 w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-          <Check className="h-5 w-5 text-white" />
-        </button>
       </header>
 
       <main className="flex-1 pb-24 px-6 py-6 space-y-6">
@@ -106,13 +97,6 @@ const Settings = () => {
               </div>
               <Switch checked={notifications} onCheckedChange={setNotifications} />
             </div>
-            <button className="flex items-center justify-between p-4 w-full text-left hover:bg-muted/50 transition-colors">
-              <div className="flex items-center gap-3">
-                <Volume2 className="h-5 w-5 text-accent" />
-                <span className="text-foreground">소리 및 진동</span>
-              </div>
-              <span className="text-muted-foreground">›</span>
-            </button>
           </Card>
         </div>
 
