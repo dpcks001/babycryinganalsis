@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Clock } from "lucide-react";
 import { useTranslation } from "@/lib/translations";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 type Period = "today" | "week" | "month";
@@ -26,12 +27,18 @@ const Statistics = () => {
   const [analyses, setAnalyses] = useState<AudioAnalysis[]>([]);
   const [loading, setLoading] = useState(true);
   const t = useTranslation();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchAnalyses();
   }, [selectedPeriod]);
 
   const fetchAnalyses = async () => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
       const now = new Date();
@@ -48,6 +55,7 @@ const Statistics = () => {
       const { data, error } = await supabase
         .from('audio_analyses')
         .select('*')
+        .eq('user_id', user.id)
         .gte('created_at', startDate.toISOString())
         .order('created_at', { ascending: false });
 
@@ -69,7 +77,6 @@ const Statistics = () => {
       
       setAnalyses(transformedData);
     } catch (error) {
-      console.error('Error fetching analyses:', error);
       toast.error("데이터를 불러올 수 없습니다");
     } finally {
       setLoading(false);

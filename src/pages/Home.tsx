@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { useTranslation } from "@/lib/translations";
 import { AudioRecorder } from "@/utils/audioAnalysis";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { audioAnalysisSchema } from "@/lib/audioValidation";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +23,7 @@ const Home = () => {
   const [recordingTime, setRecordingTime] = useState(0);
   const navigate = useNavigate();
   const t = useTranslation();
+  const { user } = useAuth();
   const recorderRef = useRef<AudioRecorder | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -44,24 +47,50 @@ const Home = () => {
       const audioBlob = await recorderRef.current!.stopRecording();
       const result = await recorderRef.current!.analyzeAudio(audioBlob);
       
+      if (!user) {
+        toast.error("로그인이 필요합니다");
+        navigate("/auth");
+        return;
+      }
+
+      // Validate audio analysis data
+      const dataToInsert = {
+        duration: result.duration,
+        rms_avg: result.rms_avg,
+        rms_max: result.rms_max,
+        spectral_centroid_mean: result.spectral_centroid_mean,
+        spectral_rolloff_mean: result.spectral_rolloff_mean,
+        zcr_mean: result.zcr_mean,
+        mfcc_mean: result.mfcc_mean,
+        energy_avg: result.energy_avg,
+        user_id: user.id
+      };
+
+      const validationResult = audioAnalysisSchema.safeParse(dataToInsert);
+      if (!validationResult.success) {
+        toast.error("분석 데이터 검증 실패");
+        navigate("/");
+        return;
+      }
+
       // Save to database
       const { data, error } = await supabase
         .from('audio_analyses')
         .insert({
-          duration: result.duration,
-          rms_avg: result.rms_avg,
-          rms_max: result.rms_max,
-          spectral_centroid_mean: result.spectral_centroid_mean,
-          spectral_rolloff_mean: result.spectral_rolloff_mean,
-          zcr_mean: result.zcr_mean,
-          mfcc_mean: result.mfcc_mean,
-          energy_avg: result.energy_avg
+          duration: validationResult.data.duration,
+          rms_avg: validationResult.data.rms_avg,
+          rms_max: validationResult.data.rms_max,
+          spectral_centroid_mean: validationResult.data.spectral_centroid_mean,
+          spectral_rolloff_mean: validationResult.data.spectral_rolloff_mean,
+          zcr_mean: validationResult.data.zcr_mean,
+          mfcc_mean: validationResult.data.mfcc_mean,
+          energy_avg: validationResult.data.energy_avg,
+          user_id: validationResult.data.user_id
         })
         .select()
         .single();
 
       if (error) {
-        console.error('Error saving to database:', error);
         toast.error("분석 결과 저장 실패");
       } else {
         localStorage.setItem('audioAnalysisResult', JSON.stringify(data));
@@ -74,7 +103,6 @@ const Home = () => {
         navigate("/result");
       }, 2000);
     } catch (error) {
-      console.error('Analysis error:', error);
       toast.error("분석 중 오류가 발생했습니다");
       navigate("/");
     }
@@ -108,7 +136,6 @@ const Home = () => {
           stopRecordingAndAnalyze();
         }, 10000);
       } catch (error) {
-        console.error('Recording error:', error);
         toast.error("녹음을 시작할 수 없습니다");
       }
     } else {

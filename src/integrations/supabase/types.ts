@@ -25,6 +25,7 @@ export type Database = {
           rms_max: number
           spectral_centroid_mean: number
           spectral_rolloff_mean: number
+          user_id: string | null
           zcr_mean: number
         }
         Insert: {
@@ -37,6 +38,7 @@ export type Database = {
           rms_max: number
           spectral_centroid_mean: number
           spectral_rolloff_mean: number
+          user_id?: string | null
           zcr_mean: number
         }
         Update: {
@@ -49,6 +51,7 @@ export type Database = {
           rms_max?: number
           spectral_centroid_mean?: number
           spectral_rolloff_mean?: number
+          user_id?: string | null
           zcr_mean?: number
         }
         Relationships: []
