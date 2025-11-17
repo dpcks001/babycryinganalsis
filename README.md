@@ -1,73 +1,62 @@
-# Welcome to your Lovable project
+# Baby Crying Analysis (Python Edition)
 
-## Project info
+This repository now contains a fully Python-based application for analyzing infant cry audio recordings. The previous Vite/React project was removed per the latest request and replaced with a single Streamlit experience backed by lightweight audio-analysis utilities written in pure Python.
 
-**URL**: https://lovable.dev/projects/b9f595c9-521d-480b-9a7a-fe5fa1a4f66e
+## Project Overview
 
-## How can I edit this code?
+The new app offers:
 
-There are several ways of editing your application.
+- A Streamlit user interface that runs in any modern browser.
+- Local audio processing using `librosa`, `numpy`, and `soundfile` with no external API calls.
+- Configurable heuristics to guess potential reasons for a baby's cry (hunger, discomfort, pain, or self-soothing).
+- Persistent analysis history during the session along with aggregate statistics.
+- Downloadable CSV exports of the raw measurements used for each prediction.
 
-**Use Lovable**
+The goal is to keep everything in Python while retaining the functionality of the original "Baby Crying Analysis" experience.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b9f595c9-521d-480b-9a7a-fe5fa1a4f66e) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+1. Create and activate a Python 3.10+ virtual environment.
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Launch the Streamlit application:
+   ```bash
+   streamlit run app.py
+   ```
+4. Open the provided local URL in your browser, upload a WAV/MP3 recording, adjust the detection thresholds, and review the generated insights.
 
-**Use your preferred IDE**
+### Preview without Streamlit
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+If you just want to see what the analysis experience feels like inside this repository (without installing Streamlit or other
+scientific dependencies), run the lightweight preview CLI:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+python preview.py --records 5 --seed 7
 ```
 
-**Edit a file directly in GitHub**
+This command fabricates demo analyses with the same heuristics used by the app and prints a dashboard-style summary directly in the terminal.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Project Structure
 
-**Use GitHub Codespaces**
+```text
+.
+├── app.py                     # Streamlit UI entry point
+├── requirements.txt           # Python dependencies
+└── babycryinganalsis
+    ├── __init__.py
+    ├── analyzer.py           # Audio feature extraction + heuristics
+    ├── data_models.py        # Shared dataclasses and utilities
+    └── demo.py               # Randomized demo data helpers
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Tests
 
-## What technologies are used for this project?
+To make sure the Python modules compile successfully, run:
 
-This project is built with:
+```bash
+python -m compileall babycryinganalsis
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/b9f595c9-521d-480b-9a7a-fe5fa1a4f66e) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+The Streamlit UI is best exercised manually because it relies on the browser runtime.
