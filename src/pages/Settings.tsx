@@ -16,10 +16,12 @@ import {
   FileText,
   Shield,
   Camera,
-  Calendar as CalendarIcon
+  Calendar as CalendarIcon,
+  LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
   DialogContent,
@@ -35,6 +37,7 @@ import { format } from "date-fns";
 import { ko, enUS, ja, zhCN, es, fr, de } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/translations";
+import { toast } from "sonner";
 
 // Get system locale
 const getSystemLocale = () => {
@@ -51,6 +54,7 @@ const getSystemLocale = () => {
 const Settings = () => {
   const navigate = useNavigate();
   const t = useTranslation();
+  const { signOut, user } = useAuth();
   const [notifications, setNotifications] = useState(true);
   const [cloudSync, setCloudSync] = useState(false);
   const [theme, setTheme] = useState<"system" | "light" | "dark">(() => {
@@ -294,7 +298,28 @@ const Settings = () => {
           </Card>
         </div>
 
-        <Button variant="ghost" className="w-full text-destructive hover:text-destructive hover:bg-destructive/10">
+        <div>
+          <h3 className="text-xs font-semibold text-accent mb-3 px-1">계정</h3>
+          <Card className="glass-effect border-0 divide-y divide-border">
+            <div className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-3">
+                <Info className="h-5 w-5 text-accent" />
+                <span className="text-foreground">이메일</span>
+              </div>
+              <span className="text-muted-foreground text-sm">{user?.email}</span>
+            </div>
+          </Card>
+        </div>
+
+        <Button 
+          variant="ghost" 
+          className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+          onClick={async () => {
+            await signOut();
+            toast.success("로그아웃되었습니다");
+          }}
+        >
+          <LogOut className="mr-2 h-4 w-4" />
           로그아웃
         </Button>
       </main>
