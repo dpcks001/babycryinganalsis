@@ -181,6 +181,15 @@ const Home = () => {
             </p>
           </div>
         )}
+
+        {!isRecording && (
+          <button
+            onClick={() => navigate("/result")}
+            className="mt-8 px-6 py-3 bg-secondary text-secondary-foreground rounded-full hover:bg-secondary/80 transition-colors"
+          >
+            테스트: 결과 화면 보기
+          </button>
+        )}
       </main>
 
       <BottomNav />
